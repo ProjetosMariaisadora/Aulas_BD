@@ -1,0 +1,129 @@
+Microsoft Windows [versão 10.0.19043.1165]
+(c) Microsoft Corporation. Todos os direitos reservados.
+
+C:\Users\Alunos>cd c:\xampp\mysql\bin
+
+c:\xampp\mysql\bin>mysql -u root
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 120
+Server version: 10.4.17-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> USE REVISAO;
+Database changed
+MariaDB [REVISAO]> SELECT p.nome_produto,p.cor
+    -> FROM produto AS p;
+ERROR 1146 (42S02): Table 'revisao.produto' doesn't exist
+MariaDB [REVISAO]> show tables;
++-------------------+
+| Tables_in_revisao |
++-------------------+
+| clientes          |
+| compras           |
+| produtos          |
++-------------------+
+3 rows in set (0.001 sec)
+
+MariaDB [REVISAO]> describe produtos;
++--------------+--------------+------+-----+---------+----------------+
+| Field        | Type         | Null | Key | Default | Extra          |
++--------------+--------------+------+-----+---------+----------------+
+| codigo       | int(11)      | NO   | PRI | NULL    | auto_increment |
+| nome_produto | varchar(255) | YES  |     | NULL    |                |
+| cor          | varchar(255) | YES  |     | NULL    |                |
+| preco        | decimal(5,2) | YES  |     | NULL    |                |
++--------------+--------------+------+-----+---------+----------------+
+4 rows in set (0.018 sec)
+
+MariaDB [REVISAO]> SELECT p.nome_produto,p.cor
+    -> FROM produtos AS p;
++-----------------+--------------+
+| nome_produto    | cor          |
++-----------------+--------------+
+| CADERNO         | AZUL         |
+| LAPIS COLORIDO  | AMARELO      |
+| BORRACHA        | BRANCA       |
+| REGUA           | TRANSPARENTE |
+| PASTA DE FOLHAS | ROSA         |
+| PEN DRIVE       | PRETO        |
+| FICHARIO        | AZUL         |
++-----------------+--------------+
+7 rows in set (0.000 sec)
+
+MariaDB [REVISAO]> SELECT com.nf, com.date_compra,p.nome_produto
+    -> FROM produtos AS p, compras as com
+    -> WHERE p.codigo=com.codigo AND p.codigo=1;
+ERROR 1054 (42S22): Unknown column 'com.date_compra' in 'field list'
+MariaDB [REVISAO]> SELECT com.nf, com.data_compra,p.nome_produto
+    -> FROM produtos AS p, compras as com
+    -> WHERE p.codigo=com.codigo AND p.codigo=1;
++----+-------------+--------------+
+| nf | data_compra | nome_produto |
++----+-------------+--------------+
+|  1 | 2022-08-18  | CADERNO      |
+|  3 | 2022-08-18  | CADERNO      |
++----+-------------+--------------+
+2 rows in set (0.001 sec)
+
+MariaDB [REVISAO]> UPDATE PRODUTOS
+    -> SET nome_produto = 'régua de 30 cm'
+    -> WHERE CODIGO = 4;
+Query OK, 1 row affected (0.010 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [REVISAO]> SELECT * FROM PRODUTOS;
++--------+-----------------+--------------+-------+
+| codigo | nome_produto    | cor          | preco |
++--------+-----------------+--------------+-------+
+|      1 | CADERNO         | AZUL         | 15.75 |
+|      2 | LAPIS COLORIDO  | AMARELO      |  0.99 |
+|      3 | BORRACHA        | BRANCA       |  1.50 |
+|      4 | régua de 30 cm  | TRANSPARENTE |  5.32 |
+|      5 | PASTA DE FOLHAS | ROSA         |  8.50 |
+|      6 | PEN DRIVE       | PRETO        | 34.20 |
+|      7 | FICHARIO        | AZUL         | 15.00 |
++--------+-----------------+--------------+-------+
+7 rows in set (0.000 sec)
+
+MariaDB [REVISAO]> UPDATE PRODUTOS
+    -> SET PRECO = PRECO*1.1
+    -> WHERE CODIGO = 1;
+Query OK, 1 row affected, 1 warning (0.002 sec)
+Rows matched: 1  Changed: 1  Warnings: 1
+
+MariaDB [REVISAO]> SELECT * FROM PRODUTOS
+    -> WHERE cor = 'AZUL';
++--------+--------------+------+-------+
+| codigo | nome_produto | cor  | preco |
++--------+--------------+------+-------+
+|      1 | CADERNO      | AZUL | 17.33 |
+|      7 | FICHARIO     | AZUL | 15.00 |
++--------+--------------+------+-------+
+2 rows in set (0.001 sec)
+
+MariaDB [REVISAO]> SELECT * FROM PRODUTOS
+    -> WHERE preco > 10.00;
++--------+--------------+-------+-------+
+| codigo | nome_produto | cor   | preco |
++--------+--------------+-------+-------+
+|      1 | CADERNO      | AZUL  | 17.33 |
+|      6 | PEN DRIVE    | PRETO | 34.20 |
+|      7 | FICHARIO     | AZUL  | 15.00 |
++--------+--------------+-------+-------+
+3 rows in set (0.000 sec)
+
+MariaDB [REVISAO]> SELECT * FROM PRODUTOS
+    -> WHERE preco BETWEEN 0.50 AND 2.00;
++--------+----------------+---------+-------+
+| codigo | nome_produto   | cor     | preco |
++--------+----------------+---------+-------+
+|      2 | LAPIS COLORIDO | AMARELO |  0.99 |
+|      3 | BORRACHA       | BRANCA  |  1.50 |
++--------+----------------+---------+-------+
+2 rows in set (0.000 sec)
+
+MariaDB [REVISAO]>
+
